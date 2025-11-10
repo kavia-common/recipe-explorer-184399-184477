@@ -1,11 +1,81 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import "../styles/theme.css";
+import SearchBar from "../components/SearchBar.astro";
+import FiltersSidebar from "../components/FiltersSidebar.astro";
+import RecipeCard from "../components/RecipeCard.astro";
+import FavoritesBar from "../components/FavoritesBar.astro";
+import { getAllRecipes, filterRecipes, popular, newest, type Recipe } from "../lib/api";
+import { getFavoriteIds } from "../lib/favorites";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const q = Astro.url.searchParams.get('q') ?? '';
+const category = Astro.url.searchParams.get('category') ?? '';
+const ingredients = Astro.url.searchParams.getAll('ingredients');
+
+let all: Recipe[] = [];
+let error: string | null = null;
+try {
+  all = await getAllRecipes();
+} catch (e: any) {
+  error = e?.message ?? 'Failed to load recipes.';
+}
+
+const filtered = filterRecipes(all, { q, category, ingredients });
+const favIds = new Set(getFavoriteIds());
+
+const popularList = popular(filtered).slice(0, 6);
+const newList = newest(filtered, 6);
 ---
-
 <Layout>
-	<Welcome />
+  <nav class="topnav" role="navigation" aria-label="Main">
+    <div class="topnav-inner">
+      <a class="brand" href="/">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div class="brand-name">Recipe Explorer</div>
+      </a>
+      <div class="nav-actions">
+        <a class="button ghost" href="/favorites">Favorites</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <SearchBar value={q} />
+
+    <div class="layout">
+      <FiltersSidebar recipes={all} selectedCategory={category} selectedIngredients={ingredients} />
+      <main>
+        <FavoritesBar />
+        {error ? (
+          <div class="card" style="padding:16px;color:#b91c1c;border-color:#fecaca;background:#fef2f2;">
+            <strong>Error:</strong> {error}
+          </div>
+        ) : (
+          <>
+            <section aria-labelledby="popular-title" style="margin-top:8px;">
+              <h2 id="popular-title" class="section-title">Popular</h2>
+              {popularList.length === 0 ? (
+                <div class="empty card">No popular recipes match your filters.</div>
+              ) : (
+                <div class="grid recipes">
+                  {popularList.map(r => <RecipeCard recipe={r} isFav={favIds.has(r.id)} />)}
+                </div>
+              )}
+            </section>
+
+            <section aria-labelledby="new-title" style="margin-top:16px;">
+              <h2 id="new-title" class="section-title">New</h2>
+              {newList.length === 0 ? (
+                <div class="empty card">No new recipes match your filters.</div>
+              ) : (
+                <div class="grid recipes">
+                  {newList.map(r => <RecipeCard recipe={r} isFav={favIds.has(r.id)} />)}
+                </div>
+              )}
+            </section>
+          </>
+        )}
+      </main>
+    </div>
+  </div>
 </Layout>

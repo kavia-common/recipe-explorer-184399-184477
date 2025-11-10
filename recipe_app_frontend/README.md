@@ -1,47 +1,43 @@
-# Astro Starter Kit: Minimal
+# Recipe Explorer (Astro)
 
-```sh
-npm create astro@latest -- --template minimal
-```
+A modern, responsive recipe browsing UI using the Ocean Professional theme.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+## Features
+- Home with Popular and New sections
+- Search and filter (by category and ingredients)
+- Recipe detail page with ingredients, steps, time, and servings
+- Favorites management (persisted in localStorage)
+- API fallback: Uses `PUBLIC_API_BASE` if available, else local mock data
+- Responsive layout and accessible components
+- Basic loading/error states
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Getting started
+Install and run (from this container root):
+- `npm install`
+- `npm run dev` (dev server on port 3000 per astro.config.mjs)
+- `npm run build` then `npm run preview` to preview a production build
 
-## 🚀 Project Structure
+## Data source behavior
+- If `PUBLIC_API_BASE` is set (e.g. `https://your-api.example.com`), frontend fetches `GET {PUBLIC_API_BASE}/recipes` and `GET {PUBLIC_API_BASE}/recipes/:id`.
+- If not set or fetch fails, it falls back to bundled mock data at `src/data/recipes.json`.
 
-Inside of your Astro project, you'll see the following folders and files:
+Note: Do not hardcode secrets; all config is read from `import.meta.env`. Other `PUBLIC_*` envs are available but not required.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Project structure (highlights)
+- `src/styles/theme.css` — Ocean Professional theme styles
+- `src/lib/api.ts` — Data layer with API/mock fallback
+- `src/lib/favorites.ts` — Favorites storage in localStorage
+- `src/components/*` — UI components (SearchBar, FiltersSidebar, RecipeCard, etc.)
+- `src/pages/index.astro` — Home page
+- `src/pages/recipes/[id].astro` — Recipe detail
+- `src/pages/favorites.astro` — Favorites list
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Accessibility
+- Semantic roles and aria attributes for search, nav, regions
+- Keyboard-friendly favorites toggle and links
+- Reduced motion-friendly transitions
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Notes
+- No changes to scripts were made; `dev/build/preview` remain standard.
+- Styling is implemented with scoped CSS and a global theme without Tailwind.
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

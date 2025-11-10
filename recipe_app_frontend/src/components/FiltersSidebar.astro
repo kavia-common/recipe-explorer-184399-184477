@@ -1,0 +1,64 @@
+---
+import type { Recipe } from "../lib/api";
+
+export interface Props {
+  recipes: Recipe[];
+  selectedCategory?: string;
+  selectedIngredients?: string[];
+}
+const { recipes, selectedCategory = "", selectedIngredients = [] } = Astro.props as Props;
+
+const categories = Array.from(new Set(recipes.map(r => r.category))).sort();
+const allIngredients = Array.from(new Set(recipes.flatMap(r => r.ingredients))).sort((a,b)=>a.localeCompare(b));
+
+const params = new URLSearchParams(Astro.url.search);
+---
+<aside class="card sidebar" aria-label="Filters">
+  <h3 class="section-title">Filters</h3>
+  <div class="divider"></div>
+
+  <form class="filter" method="get">
+    <label for="category">Category</label>
+    <select id="category" name="category" class="input" value={selectedCategory}>
+      <option value="">All</option>
+      {categories.map(c => <option value={c} selected={c === selectedCategory}>{c}</option>)}
+    </select>
+
+    <label for="ingredients" style="margin-top:10px;">Ingredients</label>
+    <div class="chips" id="chips">
+      {allIngredients.map((i) => {
+        const sel = selectedIngredients.includes(i);
+        const nextParams = new URLSearchParams(params);
+        const key = 'ingredients';
+        const current = nextParams.getAll(key);
+        if (sel) {
+          // remove
+          const idx = current.indexOf(i);
+          if (idx > -1) current.splice(idx,1);
+        } else {
+          current.push(i);
+        }
+        nextParams.delete('ingredients');
+        for (const v of current) nextParams.append('ingredients', v);
+        if (selectedCategory) nextParams.set('category', selectedCategory);
+        const q = params.get('q'); if (q) nextParams.set('q', q);
+        const href = `?${nextParams.toString()}`;
+        return (
+          <a href={href} class={sel ? 'pill' : 'badge'} aria-pressed={sel ? 'true' : 'false'}>{i}</a>
+        );
+      })}
+    </div>
+
+    <div class="actions">
+      <button class="ghost" type="submit">Apply</button>
+      <a class="button secondary" href={Astro.url.pathname}>Reset</a>
+    </div>
+  </form>
+</aside>
+
+<style>
+  .sidebar { padding: 16px; position: sticky; top: 72px; align-self: start; }
+  .filter { display: flex; flex-direction: column; gap: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .actions { display: flex; gap: 8px; margin-top: 8px; }
+</style>

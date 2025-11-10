@@ -1,0 +1,39 @@
+---
+import { getFavoriteIds } from "../lib/favorites";
+
+const favCount = typeof window === 'undefined' ? 0 : getFavoriteIds().length;
+---
+<div class="favorites card" role="region" aria-label="Favorites bar">
+  <div class="row">
+    <div class="left">
+      <strong>Favorites</strong>
+      <span class="count badge" aria-live="polite">{favCount}</span>
+    </div>
+    <div class="right">
+      <a href="/favorites" class="button ghost">View all</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .favorites { padding: 12px; }
+  .row { display: flex; align-items: center; justify-content: space-between; }
+  .left { display: flex; gap: 8px; align-items: center; }
+</style>
+
+<script>
+  function updateCount() {
+    const el = document.querySelector('.favorites .count') as HTMLElement | null;
+    if (!el) return;
+    const raw = localStorage.getItem('recipe_favorites_v1') || '[]';
+    try {
+      const n = JSON.parse(raw).length || 0;
+      el.textContent = String(n);
+    } catch { el.textContent = '0'; }
+  }
+  document.addEventListener('favorites:changed', updateCount);
+  // Initialize on client
+  if (typeof window !== 'undefined') {
+    updateCount();
+  }
+</script>

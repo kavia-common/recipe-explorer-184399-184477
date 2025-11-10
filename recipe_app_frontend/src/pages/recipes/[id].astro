@@ -1,0 +1,76 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getRecipeById, getAllRecipes } from "../../lib/api";
+import { isFavorite } from "../../lib/favorites";
+
+export async function getStaticPaths() {
+  const all = await getAllRecipes();
+  return all.map(r => ({ params: { id: r.id } }));
+}
+
+const { id } = Astro.params;
+const recipe = await getRecipeById(id!);
+const fav = recipe ? isFavorite(recipe.id) : false;
+---
+<Layout>
+  <link rel="stylesheet" href="/src/styles/theme.css" />
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a class="brand" href="/">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div class="brand-name">Recipe Explorer</div>
+      </a>
+      <div class="nav-actions">
+        <a class="button ghost" href="/favorites">Favorites</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    {recipe ? (
+      <article class="card" style="overflow:hidden;">
+        <img src={recipe.image} alt={recipe.title} style="width:100%;max-height:320px;object-fit:cover;" />
+        <div style="padding:16px;">
+          <header style="display:flex;justify-content:space-between;gap:12px;align-items:start;">
+            <h1 style="margin:0">{recipe.title}</h1>
+            <button class="fav-btn" data-id={recipe.id} aria-pressed={fav ? "true" : "false"}>{fav ? "★" : "☆"}</button>
+          </header>
+          <div class="meta" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="pill">{recipe.category}</span>
+            <span class="badge">⏱ {recipe.time}m</span>
+            <span class="badge">🍽 {recipe.servings}</span>
+          </div>
+
+          <section style="margin-top:16px;">
+            <h3 class="section-title">Ingredients</h3>
+            <ul>
+              {recipe.ingredients.map(i => <li>{i}</li>)}
+            </ul>
+          </section>
+
+          <section style="margin-top:8px;">
+            <h3 class="section-title">Steps</h3>
+            <ol>
+              {recipe.steps.map(s => <li style="margin-bottom:8px;">{s}</li>)}
+            </ol>
+          </section>
+        </div>
+      </article>
+    ) : (
+      <div class="empty card" style="padding:24px;">Recipe not found.</div>
+    )}
+  </div>
+</Layout>
+
+<script>
+  import { toggleFavorite } from "../../lib/favorites";
+  const btn = document.querySelector('.fav-btn') as HTMLButtonElement | null;
+  btn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = btn.getAttribute('data-id');
+    if (!id) return;
+    const on = toggleFavorite(id);
+    btn.textContent = on ? "★" : "☆";
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+</script>

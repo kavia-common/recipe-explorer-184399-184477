@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout>
+  <link rel="stylesheet" href="/src/styles/theme.css" />
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a class="brand" href="/">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div class="brand-name">Recipe Explorer</div>
+      </a>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="card" style="padding:24px;text-align:center;">
+      <h1 style="margin:0 0 8px;">Page not found</h1>
+      <p class="empty">The page you are looking for doesn’t exist.</p>
+      <div style="margin-top:12px;">
+        <a class="button" href="/">Go home</a>
+      </div>
+    </div>
+  </div>
+</Layout>

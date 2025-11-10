@@ -1,0 +1,68 @@
+[
+  {
+    "id": "r-1",
+    "title": "Lemon Herb Grilled Chicken",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
+    "category": "Main",
+    "ingredients": ["Chicken breast", "Lemon", "Olive oil", "Garlic", "Parsley"],
+    "steps": [
+      "Marinate chicken with lemon juice, olive oil, garlic, and parsley for 30 minutes.",
+      "Preheat grill to medium-high heat.",
+      "Grill chicken for 6-7 minutes per side until cooked through.",
+      "Rest for 5 minutes before slicing."
+    ],
+    "time": 30,
+    "servings": 2,
+    "popular": true,
+    "createdAt": "2025-09-01T10:00:00Z"
+  },
+  {
+    "id": "r-2",
+    "title": "Creamy Mushroom Pasta",
+    "image": "https://images.unsplash.com/photo-1521389508051-d7ffb5dc8bbf?q=80&w=1200&auto=format&fit=crop",
+    "category": "Main",
+    "ingredients": ["Pasta", "Mushrooms", "Cream", "Parmesan", "Garlic"],
+    "steps": [
+      "Cook pasta until al dente.",
+      "Sauté mushrooms with garlic until browned.",
+      "Add cream and simmer to thicken.",
+      "Toss with pasta and parmesan."
+    ],
+    "time": 25,
+    "servings": 3,
+    "popular": true,
+    "createdAt": "2025-10-12T09:00:00Z"
+  },
+  {
+    "id": "r-3",
+    "title": "Avocado Toast with Egg",
+    "image": "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1200&auto=format&fit=crop",
+    "category": "Breakfast",
+    "ingredients": ["Bread", "Avocado", "Egg", "Lemon", "Chili flakes"],
+    "steps": [
+      "Toast bread.",
+      "Mash avocado with lemon, salt, and pepper.",
+      "Fry or poach egg.",
+      "Assemble and top with chili flakes."
+    ],
+    "time": 10,
+    "servings": 1,
+    "popular": false,
+    "createdAt": "2025-10-30T08:00:00Z"
+  },
+  {
+    "id": "r-4",
+    "title": "Berry Yogurt Parfait",
+    "image": "https://images.unsplash.com/photo-1467453678174-768ec283a940?q=80&w=1200&auto=format&fit=crop",
+    "category": "Dessert",
+    "ingredients": ["Yogurt", "Berries", "Granola", "Honey"],
+    "steps": [
+      "Layer yogurt, berries, and granola in a glass.",
+      "Drizzle with honey and serve."
+    ],
+    "time": 5,
+    "servings": 2,
+    "popular": false,
+    "createdAt": "2025-11-01T11:00:00Z"
+  }
+]

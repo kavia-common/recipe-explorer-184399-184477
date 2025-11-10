@@ -1,9 +1,19 @@
-// eslint.config.mjs
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default [
+  // Ignore generated output and build artifacts
+  {
+    ignores: [
+      '.astro/**',
+      'dist/**',
+      // also ignore compiled files in workspace root if invoked from there
+      '../**/.astro/**',
+      '../**/dist/**',
+    ],
+  },
+
   js.configs.recommended,
 
   // TypeScript support
@@ -18,15 +28,20 @@ export default [
         ecmaVersion: 2022,
         sourceType: 'module',
       },
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
     },
     rules: {
-      // Example custom rules for TS
       '@typescript-eslint/no-unused-vars': ['warn'],
       '@typescript-eslint/explicit-function-return-type': 'off',
+      // allow unknown in a few places for env typing
+      '@typescript-eslint/no-explicit-any': ['warn'],
     },
   },
 
-  // JS files config (same as before)
+  // JS files config
   {
     files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
